@@ -11,10 +11,8 @@
       btn.hidden = false;
       btn.addEventListener("click", function () {
         navigator.clipboard.writeText(address).then(function () {
-          btn.textContent = "Copied";
           btn.setAttribute("data-state", "done");
           setTimeout(function () {
-            btn.textContent = "Copy";
             btn.removeAttribute("data-state");
           }, 2000);
         });

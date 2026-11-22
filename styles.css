@@ -108,6 +108,13 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 }
 .copy:hover { color: var(--accent); }
 .copy[data-state="done"] { color: var(--accent); }
+/* Both labels share one grid cell, so the button keeps the width of "Copied" and nothing shifts. */
+.copy { display: inline-grid; }
+.copy[hidden] { display: none; }
+.copy > span { grid-area: 1 / 1; }
+.copy .done,
+.copy[data-state="done"] .idle { visibility: hidden; }
+.copy[data-state="done"] .done { visibility: visible; }
 
 /* Selected work */
 .work { margin-top: clamp(4.5rem, 12vh, 7rem); }
