@@ -39,6 +39,10 @@ body {
 
 h1, h2, h3, p, ul { margin: 0; }
 
+/* Balanced headings; body text avoids orphans and ragged last lines. */
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+
 a {
   color: inherit;
   text-decoration: underline;
