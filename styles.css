@@ -67,7 +67,8 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--rule);
 }
-.byline a { color: var(--ink); text-decoration: none; font-weight: 600; }
+.byline a { color: var(--ink); text-decoration: none; }
+.place { font-style: italic; }
 
 /* The opening statement is the centrepiece */
 .lede {
