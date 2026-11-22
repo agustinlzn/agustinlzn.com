@@ -8,7 +8,7 @@ No framework and no build step: plain HTML, CSS and a few lines of JavaScript.
 - `index.html` — the page content.
 - `styles.css` — styles. Colors are variables at the top of the file.
 - `fonts/` — Source Serif 4 (variable, self-hosted, SIL Open Font License).
-- `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the Rosario / New York clock.
+- `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the Argentina / New York clock.
 - `404.html` — page shown for unknown URLs.
 - `favicon.svg` — tab icon.
 - `vercel.json` — Vercel settings (clean URLs).

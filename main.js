@@ -22,7 +22,7 @@
     }
   }
 
-  // Colophon clock: local time in Rosario next to New York, so US teams see the overlap.
+  // Colophon clock: local time in Argentina next to New York, so US teams see the overlap.
   var clock = document.getElementById("clock");
   if (clock && window.Intl) {
     var t = function (tz) {
@@ -30,7 +30,7 @@
         .format(new Date()).replace(" AM", " am").replace(" PM", " pm");
     };
     var render = function () {
-      clock.textContent = "It’s " + t("America/Argentina/Cordoba") + " in Rosario and " +
+      clock.textContent = "It’s " + t("America/Argentina/Cordoba") + " in Argentina and " +
         t("America/New_York") + " in New York. My working day overlaps US Eastern time.";
     };
     render();
