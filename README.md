@@ -12,13 +12,18 @@ No framework and no build step: plain HTML, CSS and a few lines of JavaScript.
 - `404.html` — page shown for unknown URLs.
 - `favicon.svg` — tab icon.
 - `vercel.json` — Vercel settings (clean URLs).
-- `agustin-lozano-resume.pdf` — the English resume linked from the page. **Add it here** (export the
-  English Google Doc as PDF and save it with this exact name).
+- `agustin-lozano-resume.pdf` — the English resume linked from the page. To update it, export the
+  English Google Doc as PDF and replace this file keeping the exact name.
+
+## Analytics
+
+Vercel Web Analytics, loaded with the two `<script>` tags in the `<head>` of `index.html` and
+`404.html` (no npm package: there is no build step). It must be enabled in the Vercel project
+(Analytics tab). The script only exists on Vercel, so it 404s on a local preview; that is harmless.
 
 ## Local preview
 
 ```sh
-cd website
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
