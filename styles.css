@@ -184,6 +184,8 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   color: var(--muted);
 }
 .meta + p { margin-top: 0.75rem; }
+/* Lighter stroke for the work descriptions, so the titles carry the weight. */
+.piece p:not(.meta) { font-weight: 350; }
 
 .colophon {
   margin-top: 3rem;

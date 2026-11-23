@@ -56,7 +56,7 @@
       var inArgentina = /^America\/(Argentina\/|Buenos_Aires$|Cordoba$)/.test(visitor);
       var ar = time(AR, now);
       if (inArgentina) {
-        clock.textContent = "It’s " + ar + " in Argentina.";
+        clock.textContent = "Hi, fellow Argentine 🇦🇷";
         return;
       }
       var diff = offset(visitor, now) - offset(AR, now); // visitor minus Argentina
