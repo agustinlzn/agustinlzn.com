@@ -120,17 +120,25 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .contact {
   list-style: none;
   padding: 0;
-  margin-top: 2.25rem;
+  margin-top: 3rem;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem 1.75rem;
 }
-/* Email (with its Copy button) on its own line; the links share the next one. */
-.contact li:first-child { flex-basis: 100%; }
 /* On phones, tighten the links so all four fit on one line. */
 @media (max-width: 26rem) {
   .contact { font-size: 1rem; column-gap: 1.1rem; }
+}
+
+/* Under the links: the email row, then the quieter time-zone line. */
+.reach { margin-top: 1rem; }
+.clock {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: var(--muted);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .copy {
@@ -187,14 +195,21 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 /* Lighter stroke for the work descriptions, so the titles carry the weight. */
 .piece p:not(.meta) { font-weight: 350; }
 
+
+/* Closing line: an invitation on the left, the deploy year on the right (like the masthead). */
 .colophon {
   margin-top: 3rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.25rem 1.5rem;
   font-size: 0.9375rem;
   color: var(--muted);
-  font-variant-numeric: lining-nums tabular-nums;
 }
+.updated { font-size: 0.8125rem; font-style: italic; font-variant-numeric: lining-nums; align-self: baseline; }
 
 @media (min-width: 52rem) {
   .page { padding-top: 2.5rem; }

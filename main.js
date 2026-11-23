@@ -1,10 +1,13 @@
 (function () {
   // Email: assembled here so the address is not sitting in the HTML for scrapers.
+  // Every link with data-user gets the mailto; only the contact one shows the address.
+  document.querySelectorAll("a[data-user]").forEach(function (a) {
+    a.href = "mailto:" + a.getAttribute("data-user") + "@" + a.getAttribute("data-domain");
+  });
   var link = document.querySelector(".email");
   if (link) {
     var address = link.getAttribute("data-user") + "@" + link.getAttribute("data-domain");
     link.textContent = address;
-    link.href = "mailto:" + address;
 
     var btn = document.querySelector(".copy");
     if (btn && navigator.clipboard) {
@@ -20,7 +23,7 @@
     }
   }
 
-  // Colophon clock: local time in Argentina next to the visitor's own time, plus how much our
+  // Time-zone line under the email: local time in Argentina next to the visitor's own time, plus how much our
   // working days (9 am to 6 pm on each side) overlap. The visitor's place comes from the browser's
   // time zone, so nothing is looked up or sent anywhere. Unknown zones fall back to New York.
   var clock = document.getElementById("clock");

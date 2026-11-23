@@ -89,7 +89,7 @@
     '<label>Date and time<select name="now">' + options(DATES, state.now) + "</select></label>" +
     '<span class="check"><input type="checkbox" id="devdock-clip"' + (state.noClipboard ? " checked" : "") +
     '><label for="devdock-clip" style="display:inline;color:inherit">No clipboard (hides Copy)</label></span>' +
-    '<span class="row"><button type="button" data-act="footer">Go to footer</button>' +
+    '<span class="row"><button type="button" data-act="clock">Go to clock</button>' +
     '<button type="button" data-act="reset">Reset</button></span>' +
     "</div>";
   document.body.appendChild(dock);
@@ -116,8 +116,8 @@
   dock.querySelector("#devdock-clip").addEventListener("change", function (e) {
     state.noClipboard = e.target.checked; save(); apply();
   });
-  dock.querySelector("[data-act=footer]").addEventListener("click", function () {
-    document.querySelector(".colophon").scrollIntoView({ behavior: "smooth" });
+  dock.querySelector("[data-act=clock]").addEventListener("click", function () {
+    document.getElementById("clock").scrollIntoView({ behavior: "smooth", block: "center" });
   });
   dock.querySelector("[data-act=reset]").addEventListener("click", function () {
     state = { open: true };

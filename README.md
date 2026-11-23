@@ -1,25 +1,26 @@
 # agustinlzn.com
 
 Personal site: a single static page with contact details, links, work and projects.
-No framework and no build step: plain HTML, CSS and a few lines of JavaScript.
+No framework: plain HTML, CSS and a few lines of JavaScript. The only build step stamps the deploy month and year (`build.js`).
 
 ## Files
 
 - `index.html` — the page content.
 - `styles.css` — styles. Colors are variables at the top of the file, with a dark set that follows the visitor's system setting (`prefers-color-scheme`).
 - `fonts/` — Source Serif 4 (variable, self-hosted, SIL Open Font License).
-- `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the footer clock (Argentina time plus how many hours our 9-to-6 working days overlap, from the browser time zone; Argentine visitors get "Hi, fellow Argentine" instead, unknown zones fall back to New York).
+- `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the time-zone line under the email (Argentina time plus how many hours our 9-to-6 working days overlap, from the browser time zone; Argentine visitors get "Hi, fellow Argentine" instead, unknown zones fall back to New York).
 - `dev.js` — dev dock for local previews only (see below). Not deployed: listed in `.vercelignore`.
 - `404.html` — page shown for unknown URLs.
 - `favicon.svg` — tab icon.
-- `vercel.json` — Vercel settings (clean URLs).
+- `vercel.json` — Vercel settings: clean URLs, and `node build.js` as the build command.
+- `build.js` — the only build step: stamps the deploy month and year into the footer's "Updated Nov 2026" (`<time id="updated">` in `index.html`). Locally the date committed in the HTML is shown.
 - `agustin-lozano-resume.pdf` — the English resume linked from the page. To update it, export the
   English Google Doc as PDF and replace this file keeping the exact name.
 
 ## Analytics
 
 Vercel Web Analytics, loaded with the two `<script>` tags in the `<head>` of `index.html` and
-`404.html` (no npm package: there is no build step). It must be enabled in the Vercel project
+`404.html` (no npm package: there is no bundler). It must be enabled in the Vercel project
 (Analytics tab). The script only exists on Vercel, so it 404s on a local preview; that is harmless.
 
 ## Local preview
@@ -31,7 +32,7 @@ python3 -m http.server 8000
 
 On localhost a **Dev** dock appears in the bottom-right corner (loaded by `main.js` only there). It
 forces light or dark mode, sets the visitor's time zone and a fixed date (to check daylight saving)
-for the footer clock, and can hide the Copy button as if the clipboard were unavailable. Its settings
+for the time-zone line, and can hide the Copy button as if the clipboard were unavailable. Its settings
 are kept in `localStorage` across reloads; **Reset** goes back to the real ones.
 
 ## Deploy (Vercel)
@@ -40,7 +41,7 @@ In the Vercel project for agustinlzn.com:
 
 - Root Directory: `.` (repo root)
 - Framework Preset: Other
-- Build Command: none · Output Directory: `.`
+- Build Command and Output Directory come from `vercel.json` (`node build.js`, `.`)
 
 Every push to the main branch redeploys the site.
 
