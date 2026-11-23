@@ -68,12 +68,12 @@
       });
       overlap = Math.floor(overlap);
 
-      var line = "It’s " + ar + " in Argentina, ";
-      if (diff === 0) line += "same as you.";
-      else {
-        line += time(visitor, now) + (guessed ? " in New York. " : " for you. ");
-        line += overlap > 0 ? hours(overlap) + " of working overlap." : "I can meet off-hours.";
-      }
+      // The visitor already knows their own time, so only an unknown zone names New York's.
+      var line = "It’s " + ar + " in Argentina";
+      if (guessed) line += ", " + time(NY, now) + " in New York. " + hours(overlap) + " of working overlap.";
+      else if (diff === 0) line += ", same as you.";
+      else if (overlap > 0) line += ". We have " + hours(overlap) + " of working overlap.";
+      else line += ". I can meet off-hours.";
       clock.textContent = line;
     };
     render();
