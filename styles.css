@@ -18,8 +18,22 @@
   --ink: #1b1e24;
   --muted: #6a6f79;
   --rule: #d6d9df;
+  --ink-soft: #3a3e47;
   --accent: #2c46a0;
   --serif: "Source Serif", Georgia, "Times New Roman", serif;
+  color-scheme: light dark;
+}
+
+/* Dark mode follows the visitor's system setting. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15171b;
+    --ink: #e7e9ed;
+    --ink-soft: #c3c7cf;
+    --muted: #9298a3;
+    --rule: #2d3139;
+    --accent: #93a8f5;
+  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -89,7 +103,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   margin-top: 1.75rem;
   max-width: 34em;
   font-size: 1.1875rem;
-  color: #3a3e47;
+  color: var(--ink-soft);
 }
 
 .contact {
@@ -100,6 +114,12 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem 1.75rem;
+}
+/* Email (with its Copy button) on its own line; the links share the next one. */
+.contact li:first-child { flex-basis: 100%; }
+/* On phones, tighten the links so all four fit on one line. */
+@media (max-width: 26rem) {
+  .contact { font-size: 1rem; column-gap: 1.1rem; }
 }
 
 .copy {

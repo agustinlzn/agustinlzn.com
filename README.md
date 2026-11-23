@@ -6,9 +6,9 @@ No framework and no build step: plain HTML, CSS and a few lines of JavaScript.
 ## Files
 
 - `index.html` — the page content.
-- `styles.css` — styles. Colors are variables at the top of the file.
+- `styles.css` — styles. Colors are variables at the top of the file, with a dark set that follows the visitor's system setting (`prefers-color-scheme`).
 - `fonts/` — Source Serif 4 (variable, self-hosted, SIL Open Font License).
-- `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the Argentina / New York clock.
+- `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the footer clock (Argentina time next to the visitor's, from the browser time zone, with how much our 9-to-6 working days overlap; Argentine visitors see only Argentina time, unknown zones fall back to New York).
 - `404.html` — page shown for unknown URLs.
 - `favicon.svg` — tab icon.
 - `vercel.json` — Vercel settings (clean URLs).
