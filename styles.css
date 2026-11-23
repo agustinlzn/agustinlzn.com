@@ -24,9 +24,10 @@
   color-scheme: light dark;
 }
 
-/* Dark mode follows the visitor's system setting. */
+/* Dark mode follows the visitor's system setting. data-theme (set only by the local dev dock)
+   forces one or the other, so the same colors are repeated for [data-theme="dark"]. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #15171b;
     --ink: #e7e9ed;
     --ink-soft: #c3c7cf;
@@ -35,6 +36,16 @@
     --accent: #93a8f5;
   }
 }
+:root[data-theme="dark"] {
+  --paper: #15171b;
+  --ink: #e7e9ed;
+  --ink-soft: #c3c7cf;
+  --muted: #9298a3;
+  --rule: #2d3139;
+  --accent: #93a8f5;
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }

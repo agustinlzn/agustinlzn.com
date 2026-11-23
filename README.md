@@ -9,6 +9,7 @@ No framework and no build step: plain HTML, CSS and a few lines of JavaScript.
 - `styles.css` — styles. Colors are variables at the top of the file, with a dark set that follows the visitor's system setting (`prefers-color-scheme`).
 - `fonts/` — Source Serif 4 (variable, self-hosted, SIL Open Font License).
 - `main.js` — the email link (assembled in JS so scrapers don't find the address in the HTML), its "Copy" button and the footer clock (Argentina time next to the visitor's, from the browser time zone, with how much our 9-to-6 working days overlap; Argentine visitors see only Argentina time, unknown zones fall back to New York).
+- `dev.js` — dev dock for local previews only (see below). Not deployed: listed in `.vercelignore`.
 - `404.html` — page shown for unknown URLs.
 - `favicon.svg` — tab icon.
 - `vercel.json` — Vercel settings (clean URLs).
@@ -27,6 +28,11 @@ Vercel Web Analytics, loaded with the two `<script>` tags in the `<head>` of `in
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
+
+On localhost a **Dev** dock appears in the bottom-right corner (loaded by `main.js` only there). It
+forces light or dark mode, sets the visitor's time zone and a fixed date (to check daylight saving)
+for the footer clock, and can hide the Copy button as if the clipboard were unavailable. Its settings
+are kept in `localStorage` across reloads; **Reset** goes back to the real ones.
 
 ## Deploy (Vercel)
 
