@@ -13,6 +13,7 @@ No framework: plain HTML, CSS and a few lines of JavaScript. The only build step
   hover over its 64px-tall box, or on a tap on the text on touch screens, it slides right with a
   word-by-word blur to reveal the avatar, over a trail of amber dust (`--dust`).
 - `avatar.webp` — the illustrated portrait shown at 64×64 when hovering or tapping the time-zone line.
+- `lede.js` — the home headline treatments (see **Headline** below).
 - `dev.js` — dev dock for local previews only (see below). Not deployed: listed in `.vercelignore`.
 - `404.html` — page shown for unknown URLs.
 - `favicon.svg` — tab icon.
@@ -20,6 +21,22 @@ No framework: plain HTML, CSS and a few lines of JavaScript. The only build step
 - `build.js` — the only build step: stamps the deploy month and year into the footer's "Updated Nov 2026" (`<time id="updated">` in `index.html`). Locally the date committed in the HTML is shown.
 - `agustin-lozano-resume.pdf` — the English resume linked from the page. To update it, export the
   English Google Doc as PDF and replace this file keeping the exact name.
+
+## Headline
+
+The published treatment is one setting, the `data-headline` attribute of the `<h1>` in `index.html`.
+Change it, commit and push to deploy it.
+
+| Value | What it does |
+| --- | --- |
+| `classic` | Plain text, no animation. |
+| `ink` | Words rise from a mask, "end to end" in italic, and letters get heavier under the pointer. |
+| `trace` | A line joins "interface" and "API", with a request and its response travelling along it. |
+| `layers` | "interface" is selected like in a design tool and "API" answers `200 OK`. Hover or tap for guides and a JSON reply. |
+
+The dev dock previews any of them without changing the setting. The greeting under the email waits
+longer or shorter for each one (`--enter-delay` in `styles.css`). `trace` and `layers` look for the
+words "interface" and "API", and `ink` italicises words 4 to 6, so check them if the sentence changes.
 
 ## Analytics
 

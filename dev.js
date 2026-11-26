@@ -25,6 +25,14 @@
     ["2026-07-15T18:00:00Z", "Jul 15, 3 pm AR (northern summer)"]
   ];
 
+  // Headline treatments (lede.js). Picking one here only previews it; what gets published is
+  // data-headline in index.html.
+  var LEDES = [["classic", "Classic"], ["ink", "A · Ink"], ["trace", "B · Trace"], ["layers", "C · Layers"]];
+  var site = window.siteLede;
+  var ledeName = function (id) {
+    return LEDES.filter(function (l) { return l[0] === id; })[0][1];
+  };
+
   var state = {};
   try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
   var save = function () { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
@@ -63,7 +71,12 @@
     ".devdock .seg button[aria-pressed=true]{background:var(--ink);color:var(--paper)}",
     ".devdock .check{display:flex;align-items:center;gap:6px;color:var(--ink)}",
     ".devdock .row{display:flex;gap:8px}",
-    ".devdock .row button{flex:1}"
+    ".devdock .row button{flex:1}",
+    ".devdock .ledes{display:grid;grid-template-columns:1fr 1fr;gap:4px}",
+    ".devdock .ledes button[aria-pressed=true]{background:var(--ink);color:var(--paper)}",
+    ".devdock .note{font-size:12px;color:var(--muted)}",
+    ".devdock .note code{display:block;margin-top:2px;font:11px ui-monospace,Menlo,monospace;color:var(--ink);user-select:all}",
+    ".devdock{max-height:calc(100vh - 32px);overflow:auto}"
   ].join("");
   var style = document.createElement("style");
   style.textContent = css;
@@ -81,6 +94,10 @@
   dock.innerHTML =
     "<summary>Dev</summary>" +
     '<div class="body">' +
+    (site ? '<div class="field"><span>Headline</span><span class="ledes" role="group" aria-label="Headline">' +
+    LEDES.map(function (l) { return '<button type="button" data-lede="' + l[0] + '">' + l[1] + "</button>"; }).join("") +
+    '</span><button type="button" data-act="replay">Replay headline</button>' +
+    '<span class="note" aria-live="polite"></span></div>' : "") +
     '<div class="field"><span>Theme</span><span class="seg" role="group" aria-label="Theme">' +
     '<button type="button" data-theme="">System</button>' +
     '<button type="button" data-theme="light">Light</button>' +
@@ -93,6 +110,40 @@
     '<button type="button" data-act="reset">Reset</button></span>' +
     "</div>";
   document.body.appendChild(dock);
+
+  var ledeButtons = dock.querySelectorAll("[data-lede]");
+  var syncLede = function () {
+    if (!site) return;
+    var shown = state.lede || site.deployed;
+    ledeButtons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-lede") === shown));
+    });
+    var note = dock.querySelector(".note");
+    note.textContent = "Published: " + ledeName(site.deployed) + ". ";
+    if (shown === site.deployed) return;
+    note.textContent += "To publish this preview, set in index.html:";
+    var code = document.createElement("code");
+    code.textContent = 'data-headline="' + shown + '"';
+    note.appendChild(code);
+  };
+  // Picking or replaying a headline scrolls to the top, where it can be seen.
+  var showLede = function () {
+    if (!site) return;
+    window.scrollTo(0, 0);
+    site.set(state.lede || site.deployed);
+  };
+  ledeButtons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var id = b.getAttribute("data-lede");
+      state.lede = id === site.deployed ? "" : id;
+      save(); syncLede(); showLede();
+    });
+  });
+  if (site) {
+    dock.querySelector("[data-act=replay]").addEventListener("click", showLede);
+    if (state.lede && state.lede !== site.current()) site.set(state.lede);
+    syncLede();
+  }
 
   var themeButtons = dock.querySelectorAll("[data-theme]");
   var syncTheme = function () {
@@ -125,7 +176,7 @@
     dock.querySelector("[name=tz]").value = "";
     dock.querySelector("[name=now]").value = "";
     dock.querySelector("#devdock-clip").checked = false;
-    syncTheme(); apply();
+    syncTheme(); syncLede(); showLede(); apply();
   });
   dock.addEventListener("toggle", function () { state.open = dock.open; save(); });
 
