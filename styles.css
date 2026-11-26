@@ -25,27 +25,69 @@
   color-scheme: light dark;
 }
 
+/* Dark palettes, one definition each. The published one is data-dark on <html> in index.html and
+   404.html; "slate" is the default below. */
+:root {
+  --d-paper: #15171b;
+  --d-ink: #e7e9ed;
+  --d-ink-soft: #c3c7cf;
+  --d-muted: #9298a3;
+  --d-rule: #2d3139;
+  --d-accent: #93a8f5;
+  --d-dust: #ffbe4d;
+}
+/* Warm charcoal, cream ink and copper: closer to a printed page at night. */
+:root[data-dark="ember"] {
+  --d-paper: #0f0c0a;
+  --d-ink: #f1e9dc;
+  --d-ink-soft: #d3c8b8;
+  --d-muted: #a39683;
+  --d-rule: #2d261f;
+  --d-accent: #e9a178;
+  --d-dust: #f4c56a;
+}
+/* Near black with neutral whites and a soft violet: the most contrast, the least tint. */
+:root[data-dark="onyx"] {
+  --d-paper: #030304;
+  --d-ink: #f2f1ee;
+  --d-ink-soft: #cbc9c3;
+  --d-muted: #928f88;
+  --d-rule: #1d1d20;
+  --d-accent: #c9b8ff;
+  --d-dust: #ffbe4d;
+}
+/* Deep green-black, sage greys and mint. */
+:root[data-dark="forest"] {
+  --d-paper: #080d0b;
+  --d-ink: #e9eee6;
+  --d-ink-soft: #c4cec2;
+  --d-muted: #8b9a8d;
+  --d-rule: #1c2822;
+  --d-accent: #93d6b0;
+  --d-dust: #eec365;
+}
+
 /* Dark mode follows the visitor's system setting. data-theme (set only by the local dev dock)
-   forces one or the other, so the same colors are repeated for [data-theme="dark"]. */
+   forces one or the other, so the same mapping is repeated for [data-theme="dark"]. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #15171b;
-    --ink: #e7e9ed;
-    --ink-soft: #c3c7cf;
-    --muted: #9298a3;
-    --rule: #2d3139;
-    --accent: #93a8f5;
-    --dust: #ffbe4d;
+    --paper: var(--d-paper);
+    --ink: var(--d-ink);
+    --ink-soft: var(--d-ink-soft);
+    --muted: var(--d-muted);
+    --rule: var(--d-rule);
+    --accent: var(--d-accent);
+    --dust: var(--d-dust);
   }
 }
 :root[data-theme="dark"] {
-  --paper: #15171b;
-  --ink: #e7e9ed;
-  --ink-soft: #c3c7cf;
-  --muted: #9298a3;
-  --rule: #2d3139;
-  --accent: #93a8f5;
-  --dust: #ffbe4d;
+  --paper: var(--d-paper);
+  --ink: var(--d-ink);
+  --ink-soft: var(--d-ink-soft);
+  --muted: var(--d-muted);
+  --rule: var(--d-rule);
+  --accent: var(--d-accent);
+  --dust: var(--d-dust);
   color-scheme: dark;
 }
 :root[data-theme="light"] { color-scheme: light; }
@@ -226,6 +268,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   margin-top: 1.75rem;
   max-width: 34em;
   font-size: 1.1875rem;
+  font-weight: 300;
   color: var(--ink-soft);
 }
 
@@ -241,7 +284,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   gap: 0.5rem 1.75rem;
 }
 /* Contact links and email: a lighter stroke, like the work descriptions. */
-.contact, .reach .email { font-weight: 350; }
+.contact, .reach .email { font-weight: 300; }
 /* On phones, tighten the links so all four fit on one line. */
 @media (max-width: 26rem) {
   .contact { font-size: 1rem; column-gap: 1.1rem; }
@@ -258,26 +301,11 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 }
 
 /* The line waits for the headline to be read, then each word rises into focus, left to right. */
-.clock {
-  --enter-delay: 1.4s;
-  --avatar-space: 4.75rem; /* the 64px avatar plus a 12px gap */
-  position: relative;
-  width: fit-content;
-  /* The hover area is a box as tall as the avatar, with the text centred in it. */
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  isolation: isolate; /* keeps the dust behind the text but above the page */
-  /* Room is reserved up front so the shifted text never runs off a narrow screen. */
-  padding-right: var(--avatar-space);
-  -webkit-tap-highlight-color: transparent;
-}
+.clock { --enter-delay: 1.4s; }
 :root[data-headline="ink"] .clock { --enter-delay: 2.2s; }
 :root[data-headline="trace"] .clock { --enter-delay: 2.4s; }
 :root[data-headline="layers"] .clock { --enter-delay: 3.2s; }
-.clock-text { display: inline-block; }
 .clock-text .word {
-  display: inline-block;
   animation: word-in 800ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
   animation-delay: calc(var(--enter-delay) + var(--i) * 80ms);
 }
@@ -290,9 +318,27 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .js .clock-text:not(.is-ready) { animation: hold 0s 4s backwards; }
 @keyframes hold { from { visibility: hidden; } }
 
+/* Reveal: shared by the time-zone line and the footer invitation (main.js). */
+.reveal {
+  --avatar-space: 4.75rem; /* the 64px avatar plus a 12px gap */
+  position: relative;
+  width: fit-content;
+  /* The hover area is a box as tall as the avatar, with the text centred in it. */
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  isolation: isolate; /* keeps the dust behind the text but above the page */
+  /* Room is reserved up front so the shifted text never runs off a narrow screen. */
+  padding-right: var(--avatar-space);
+  -webkit-tap-highlight-color: transparent;
+}
+.reveal-text { display: inline-block; }
+.reveal-text .word { display: inline-block; }
+.reveal-text .glued { white-space: nowrap; }
+
 /* Fairy dust: a faint amber glow, strongest under the text, plus the specks main.js scatters. */
-.clock::before,
-.clock-dust {
+.reveal::before,
+.reveal-dust {
   content: "";
   position: absolute;
   inset: 0;
@@ -301,14 +347,14 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   opacity: 0;
   transition: opacity 350ms ease;
 }
-.clock::before {
+.reveal::before {
   inset: 4px -14px;
   background: radial-gradient(closest-side at 60% 50%,
     color-mix(in srgb, var(--dust) 13%, transparent), transparent);
 }
-.clock.is-open::before { opacity: 1; transition: opacity 700ms ease 150ms; }
-.clock.is-open .clock-dust { opacity: 1; }
-.clock-dust i {
+.reveal.is-open::before { opacity: 1; transition: opacity 700ms ease 150ms; }
+.reveal.is-open .reveal-dust { opacity: 1; }
+.reveal-dust i {
   position: absolute;
   width: var(--size);
   height: var(--size);
@@ -318,14 +364,14 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   opacity: 0;
 }
 /* A few specks are tiny four-point sparkles. */
-.clock-dust i.spark {
+.reveal-dust i.spark {
   width: calc(var(--size) * 3);
   height: calc(var(--size) * 3);
   border-radius: 0;
   box-shadow: none;
   clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
 }
-.clock.has-dust .clock-dust i { animation: speck var(--time) ease-in-out var(--delay) infinite both; }
+.reveal.has-dust .reveal-dust i { animation: speck var(--time) ease-in-out var(--delay) infinite both; }
 @keyframes speck {
   0% { opacity: 0; transform: translate(-10px, 3px) scale(0.3); }
   30% { opacity: 0.85; transform: translate(-2px, 0) scale(1); }
@@ -335,7 +381,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 /* Open (mouse over, or a tap on touch screens; main.js sets .is-open): the text slides right and
    the avatar pops into the space it leaves. The paragraph itself stays put, so the pointer never
    falls off the moving text. */
-.clock-avatar {
+.reveal-avatar {
   position: absolute;
   left: 0;
   top: 50%;
@@ -350,9 +396,9 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   transform-origin: 50% 100%;
   transition: opacity 180ms ease, transform 250ms ease, visibility 0s 250ms;
 }
-.clock-text { transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1); }
-.clock.is-open .clock-text { transform: translateX(var(--avatar-space)); }
-.clock.is-open .clock-avatar {
+.reveal-text { transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1); }
+.reveal.is-open .reveal-text { transform: translateX(var(--avatar-space)); }
+.reveal.is-open .reveal-avatar {
   opacity: 1;
   visibility: visible;
   transform: none;
@@ -386,7 +432,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 .work h2 {
   font-size: 0.9375rem;
-  font-weight: 400;
+  font-weight: 300;
   font-style: italic;
   color: var(--muted);
   padding-bottom: 0.75rem;
@@ -414,13 +460,12 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 }
 .meta + p { margin-top: 0.75rem; }
 /* Lighter stroke for the work descriptions, so the titles carry the weight. */
-.piece p:not(.meta) { font-weight: 350; }
-
+.piece p:not(.meta) { font-weight: 250; }
 
 /* Closing line: an invitation on the left, the deploy year on the right (like the masthead). */
 .colophon {
   margin-top: 3rem;
-  padding-top: 1.25rem;
+  padding-top: 0.5rem; /* the invitation's 64px box adds the rest of the air */
   border-top: 1px solid var(--rule);
   display: flex;
   flex-wrap: wrap;

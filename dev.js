@@ -33,6 +33,14 @@
     return LEDES.filter(function (l) { return l[0] === id; })[0][1];
   };
 
+  // Dark palettes (styles.css). Same idea as the headline: previewed here, published with data-dark.
+  var DARKS = [["slate", "Slate"], ["ember", "A · Ember"], ["onyx", "B · Onyx"], ["forest", "C · Forest"]];
+  var SWATCH = { slate: ["#15171b", "#93a8f5"], ember: ["#0f0c0a", "#e9a178"], onyx: ["#030304", "#c9b8ff"], forest: ["#080d0b", "#93d6b0"] };
+  var publishedDark = document.documentElement.getAttribute("data-dark") || "slate";
+  var darkName = function (id) {
+    return (DARKS.filter(function (d) { return d[0] === id; })[0] || DARKS[0])[1];
+  };
+
   var state = {};
   try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
   var save = function () { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
@@ -44,6 +52,9 @@
     var root = document.documentElement;
     if (state.theme) root.setAttribute("data-theme", state.theme);
     else root.removeAttribute("data-theme");
+
+    root.setAttribute("data-dark", state.dark || publishedDark);
+    if (window.siteSyncDarkBar) window.siteSyncDarkBar();
 
     window.siteDev = { tz: state.tz || "", now: state.now || "" };
     if (window.siteRenderClock) window.siteRenderClock();
@@ -72,6 +83,7 @@
     ".devdock .check{display:flex;align-items:center;gap:6px;color:var(--ink)}",
     ".devdock .row{display:flex;gap:8px}",
     ".devdock .row button{flex:1}",
+    ".devdock .swatch{display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:50%;box-shadow:0 0 0 1px rgba(128,128,128,.5);vertical-align:-1px}",
     ".devdock .ledes{display:grid;grid-template-columns:1fr 1fr;gap:4px}",
     ".devdock .ledes button[aria-pressed=true]{background:var(--ink);color:var(--paper)}",
     ".devdock .note{font-size:12px;color:var(--muted)}",
@@ -102,6 +114,11 @@
     '<button type="button" data-theme="">System</button>' +
     '<button type="button" data-theme="light">Light</button>' +
     '<button type="button" data-theme="dark">Dark</button></span></div>' +
+    '<div class="field"><span>Dark palette</span><span class="ledes" role="group" aria-label="Dark palette">' +
+    DARKS.map(function (d) {
+      return '<button type="button" data-palette="' + d[0] + '"><span class="swatch" style="background:linear-gradient(135deg,' +
+        SWATCH[d[0]][0] + " 50%," + SWATCH[d[0]][1] + ' 50%)"></span>' + d[1] + "</button>";
+    }).join("") + '</span><span class="note darknote" aria-live="polite"></span></div>' +
     '<label>Visitor time zone<select name="tz">' + options(ZONES, state.tz) + "</select></label>" +
     '<label>Date and time<select name="now">' + options(DATES, state.now) + "</select></label>" +
     '<span class="check"><input type="checkbox" id="devdock-clip"' + (state.noClipboard ? " checked" : "") +
@@ -118,7 +135,7 @@
     ledeButtons.forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.getAttribute("data-lede") === shown));
     });
-    var note = dock.querySelector(".note");
+    var note = dock.querySelector(".note:not(.darknote)");
     note.textContent = "Published: " + ledeName(site.deployed) + ". ";
     if (shown === site.deployed) return;
     note.textContent += "To publish this preview, set in index.html:";
@@ -144,6 +161,31 @@
     if (state.lede && state.lede !== site.current()) site.set(state.lede);
     syncLede();
   }
+
+  var paletteButtons = dock.querySelectorAll("[data-palette]");
+  var syncDark = function () {
+    var shown = state.dark || publishedDark;
+    paletteButtons.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-palette") === shown));
+    });
+    var note = dock.querySelector(".darknote");
+    note.textContent = "Published: " + darkName(publishedDark) + ". ";
+    if (shown === publishedDark) return;
+    note.textContent += "To publish this preview, set in index.html and 404.html:";
+    var code = document.createElement("code");
+    code.textContent = 'data-dark="' + shown + '"';
+    note.appendChild(code);
+  };
+  // Picking a palette also switches to dark, so it can be seen.
+  paletteButtons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var id = b.getAttribute("data-palette");
+      state.dark = id === publishedDark ? "" : id;
+      state.theme = "dark";
+      save(); syncTheme(); syncDark(); apply();
+    });
+  });
+  syncDark();
 
   var themeButtons = dock.querySelectorAll("[data-theme]");
   var syncTheme = function () {
@@ -176,7 +218,7 @@
     dock.querySelector("[name=tz]").value = "";
     dock.querySelector("[name=now]").value = "";
     dock.querySelector("#devdock-clip").checked = false;
-    syncTheme(); syncLede(); showLede(); apply();
+    syncTheme(); syncLede(); syncDark(); showLede(); apply();
   });
   dock.addEventListener("toggle", function () { state.open = dock.open; save(); });
 

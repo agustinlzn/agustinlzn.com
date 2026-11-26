@@ -12,7 +12,8 @@ No framework: plain HTML, CSS and a few lines of JavaScript. The only build step
   The line animates in word by word after a short delay (`--enter-delay` in `styles.css`). On
   hover over its 64px-tall box, or on a tap on the text on touch screens, it slides right with a
   word-by-word blur to reveal the avatar, over a trail of amber dust (`--dust`).
-- `avatar.webp` — the illustrated portrait shown at 64×64 when hovering or tapping the time-zone line.
+- `avatar.webp` — the illustrated portrait shown at 64×64 when hovering or tapping the time-zone line or the footer
+  invitation (both use the `.reveal` styles; the behaviour is in `main.js`).
 - `og-image.jpg` — the 1200×630 preview shown when the link is shared (Open Graph tags in
   `index.html`). It holds only the avatar, name, role and headline, large enough to read as a
   thumbnail. When you replace it, raise the `?v=` number in `og:image` so cached previews refresh,
@@ -41,6 +42,14 @@ Change it, commit and push to deploy it.
 The dev dock previews any of them without changing the setting. The greeting under the email waits
 longer or shorter for each one (`--enter-delay` in `styles.css`). `trace` and `layers` look for the
 words "interface" and "API", and `ink` italicises words 4 to 6, so check them if the sentence changes.
+
+## Dark palette
+
+Dark mode (it follows the visitor's system) has four palettes in `styles.css`. The published one is
+the `data-dark` attribute of `<html>`, set in both `index.html` and `404.html`: `slate` (cool grey),
+`ember` (warm charcoal and copper), `onyx` (near black and violet) or `forest` (green-black and
+mint). The dev dock previews them. `og-image.jpg` has the slate colors baked in, so make a new one if
+you publish another palette.
 
 ## Analytics
 

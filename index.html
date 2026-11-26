@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- data-dark picks the published dark palette: "slate", "ember", "onyx" or "forest" (see styles.css).
+     Keep 404.html on the same value. -->
+<html lang="en" data-dark="forest">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +23,7 @@
   <!-- X reads the og: tags above; this only asks it for the large preview. -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#15171b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#080d0b" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/fonts/source-serif-4.woff2" as="font" type="font/woff2" crossorigin>
@@ -50,7 +52,7 @@
         <li><a href="/agustin-lozano-resume.pdf">Resume</a></li>
       </ul>
       <p class="reach"><a class="email" href="#" data-user="alozanoblua" data-domain="gmail.com">alozanoblua [at] gmail.com</a> <button class="copy" type="button" hidden><span class="idle">Copy</span><span class="done" aria-hidden="true">Copied</span></button></p>
-      <p class="clock" id="clock"><img class="clock-avatar" src="/avatar.webp" alt="" width="64" height="64" decoding="async"><span class="clock-text">Argentina is on GMT-3, a working day that overlaps US Eastern time.</span></p>
+      <p class="clock reveal" id="clock"><img class="reveal-avatar" src="/avatar.webp" alt="" width="64" height="64" decoding="async"><span class="clock-text reveal-text">Argentina is on GMT-3, a working day that overlaps US Eastern time.</span></p>
 
       <section class="work" aria-labelledby="work-title">
         <h2 id="work-title">Selected work</h2>
@@ -76,7 +78,7 @@
     </main>
 
     <footer class="colophon">
-      <p>Want to work together? <a href="https://calendly.com/agustinlzn">Book a call</a> or <a href="#" data-user="alozanoblua" data-domain="gmail.com">email me</a>.</p>
+      <p class="invite reveal"><img class="reveal-avatar" src="/avatar.webp" alt="" width="64" height="64" decoding="async"><span class="reveal-text">Want to work together? <a href="https://calendly.com/agustinlzn">Book a call</a> or <a href="#" data-user="alozanoblua" data-domain="gmail.com">email me</a>.</span></p>
       <p class="updated">Updated <time id="updated" datetime="2026-11">Nov 2026</time></p>
     </footer>
   </div>

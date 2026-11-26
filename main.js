@@ -1,4 +1,13 @@
 (function () {
+  // The browser bar in dark mode takes the active palette's background (see data-dark).
+  var darkBar = document.querySelector('meta[name="theme-color"][media*="dark"]');
+  var syncDarkBar = function () {
+    var paper = getComputedStyle(document.documentElement).getPropertyValue("--d-paper").trim();
+    if (darkBar && paper) darkBar.setAttribute("content", paper);
+  };
+  syncDarkBar();
+  window.siteSyncDarkBar = syncDarkBar;
+
   // Email: assembled here so the address is not sitting in the HTML for scrapers.
   // Every link with data-user gets the mailto; only the contact one shows the address.
   document.querySelectorAll("a[data-user]").forEach(function (a) {
@@ -106,17 +115,59 @@
     window.siteRenderClock = render;
   }
 
-  // Avatar next to the time-zone line: a mouse opens it by hovering anywhere on the 64px-tall box;
-  // on touch screens only a tap on the text toggles it, and a tap anywhere else closes it. A scroll
-  // gesture never fires pointerup.
-  if (clock && clockText) {
-    var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  // Reveal (the time-zone line and the footer invitation): a mouse opens it by hovering anywhere on
+  // the 64px-tall box; on touch screens only a tap on the text does. The text slides right to make
+  // room for the avatar, over a trail of amber dust.
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Wraps each word of fixed text in a .word span for the blur. A link stays whole, as one piece,
+  // so it keeps its underline; punctuation right after it never wraps onto the next line.
+  var wrapWords = function (text) {
+    var nodes = Array.prototype.slice.call(text.childNodes);
+    text.textContent = "";
+    var last = null; // the last piece added with no space after it
+    var add = function (piece) {
+      if (!last) text.appendChild(piece);
+      else {
+        var glued = document.createElement("span");
+        glued.className = "glued";
+        text.replaceChild(glued, last);
+        glued.appendChild(last);
+        glued.appendChild(piece);
+        piece = glued;
+      }
+      last = piece;
+    };
+    nodes.forEach(function (node) {
+      if (node.nodeType !== 3) {
+        node.classList.add("word");
+        add(node);
+        return;
+      }
+      node.textContent.split(/(\s+)/).forEach(function (part) {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          text.appendChild(document.createTextNode(" "));
+          last = null;
+          return;
+        }
+        var span = document.createElement("span");
+        span.className = "word";
+        span.textContent = part;
+        add(span);
+      });
+    });
+  };
+
+  var reveal = function (box) {
+    var text = box.querySelector(".reveal-text");
+    if (!text) return;
 
     // While the line slides, each word blurs and comes back into focus, left to right, like the
-    // entrance. Done with element.animate so it never restarts the CSS entrance animation.
+    // greeting's entrance. Done with element.animate so it never restarts that CSS animation.
     var blurWords = function () {
-      var words = clockText.querySelectorAll(".word");
-      if (still.matches || !clockText.animate) return;
+      var words = text.querySelectorAll(".word");
+      if (still.matches || !text.animate) return;
       var entering = Array.prototype.some.call(words, function (w) {
         return w.getAnimations().some(function (a) {
           return a.animationName === "word-in" && a.playState !== "finished";
@@ -136,7 +187,7 @@
 
     // Amber fairy dust behind the box: a few specks along a soft wave, lighting up left to right.
     var dust = document.createElement("span");
-    dust.className = "clock-dust";
+    dust.className = "reveal-dust";
     dust.setAttribute("aria-hidden", "true");
     var SPECKS = 22;
     for (var n = 0; n < SPECKS; n++) {
@@ -150,29 +201,35 @@
       speck.style.setProperty("--time", Math.round(1800 + Math.random() * 1400) + "ms");
       dust.appendChild(speck);
     }
-    clock.insertBefore(dust, clock.firstChild);
+    box.insertBefore(dust, box.firstChild);
 
     var dustTimer;
     var setOpen = function (open) {
-      if (open === clock.classList.contains("is-open")) return;
-      clock.classList.toggle("is-open", open);
+      if (open === box.classList.contains("is-open")) return;
+      box.classList.toggle("is-open", open);
       blurWords();
       // has-dust outlives is-open for a moment, so the specks fade out instead of vanishing.
       clearTimeout(dustTimer);
-      if (open) clock.classList.add("has-dust");
-      else dustTimer = setTimeout(function () { clock.classList.remove("has-dust"); }, 400);
+      if (open) box.classList.add("has-dust");
+      else dustTimer = setTimeout(function () { box.classList.remove("has-dust"); }, 400);
     };
-    clock.addEventListener("pointerenter", function (e) {
+    box.addEventListener("pointerenter", function (e) {
       if (e.pointerType === "mouse") setOpen(true);
     });
-    clock.addEventListener("pointerleave", function (e) {
+    box.addEventListener("pointerleave", function (e) {
       if (e.pointerType === "mouse") setOpen(false);
     });
+    // A scroll gesture never fires pointerup. A tap on a link just follows the link.
     document.addEventListener("pointerup", function (e) {
       if (e.pointerType === "mouse") return;
-      setOpen(clockText.contains(e.target) && !clock.classList.contains("is-open"));
+      var inText = text.contains(e.target);
+      if (inText && e.target.closest("a")) return;
+      setOpen(inText && !box.classList.contains("is-open"));
     });
-  }
+  };
+  var invite = document.querySelector(".invite .reveal-text");
+  if (invite) wrapWords(invite);
+  document.querySelectorAll(".reveal").forEach(reveal);
 
   // Dev dock: only on a local preview, never on the live site (dev.js is not deployed either).
   if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
