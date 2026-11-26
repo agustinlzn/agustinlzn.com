@@ -13,8 +13,10 @@ No framework: plain HTML, CSS and a few lines of JavaScript. The only build step
   hover over its 64px-tall box, or on a tap on the text on touch screens, it slides right with a
   word-by-word blur to reveal the avatar, over a trail of amber dust (`--dust`).
 - `avatar.webp` — the illustrated portrait shown at 64×64 when hovering or tapping the time-zone line.
-- `og-image.jpg` — the preview shown when the link is shared (Open Graph tags in `index.html`). If you
-  replace it with a different size, update `og:image:width` and `og:image:height`.
+- `og-image.jpg` — the 1200×630 preview shown when the link is shared (Open Graph tags in
+  `index.html`). It holds only the avatar, name, role and headline, large enough to read as a
+  thumbnail. When you replace it, raise the `?v=` number in `og:image` so cached previews refresh,
+  and check `og:image:width`, `height` and `alt`.
 - `lede.js` — the home headline treatments (see **Headline** below).
 - `dev.js` — dev dock for local previews only (see below). Not deployed: listed in `.vercelignore`.
 - `404.html` — page shown for unknown URLs.
