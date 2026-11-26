@@ -13,7 +13,9 @@ No framework: plain HTML, CSS and a few lines of JavaScript. The only build step
   hover over its 64px-tall box, or on a tap on the text on touch screens, it slides right with a
   word-by-word blur to reveal the avatar, over a trail of amber dust (`--dust`).
 - `avatar.webp` — the illustrated portrait shown at 64×64 when hovering or tapping the time-zone line or the footer
-  invitation (both use the `.reveal` styles; the behaviour is in `main.js`).
+  invitation (both use the `.reveal` styles; the behaviour is in `main.js`). A mouse passing over only lights up the words; staying
+  400 ms opens it (`DWELL`), and it closes 220 ms after leaving (`LINGER`). It never opens while the
+  mouse is on a link.
 - `og-image.jpg` — the 1200×630 preview shown when the link is shared (Open Graph tags in
   `index.html`). It holds only the avatar, name, role and headline, large enough to read as a
   thumbnail. When you replace it, raise the `?v=` number in `og:image` so cached previews refresh,

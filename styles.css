@@ -352,6 +352,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
   background: radial-gradient(closest-side at 60% 50%,
     color-mix(in srgb, var(--dust) 13%, transparent), transparent);
 }
+.reveal.is-peek::before { opacity: 0.55; } /* a first hint while the mouse is only passing */
 .reveal.is-open::before { opacity: 1; transition: opacity 700ms ease 150ms; }
 .reveal.is-open .reveal-dust { opacity: 1; }
 .reveal-dust i {

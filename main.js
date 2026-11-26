@@ -115,9 +115,12 @@
     window.siteRenderClock = render;
   }
 
-  // Reveal (the time-zone line and the footer invitation): a mouse opens it by hovering anywhere on
-  // the 64px-tall box; on touch screens only a tap on the text does. The text slides right to make
-  // room for the avatar, over a trail of amber dust.
+  // Reveal (the time-zone line and the footer invitation). With a mouse it works in two steps, on the
+  // whole 64px-tall box: passing over it only peeks (nothing moves), and staying opens it, so the
+  // text slides right to make room for the avatar, over a trail of amber dust. On touch screens a
+  // tap on the text opens it right away.
+  var DWELL = 400; // ms the mouse has to stay before it opens
+  var LINGER = 220; // ms it stays open after the mouse leaves, so slipping off the edge is forgiven
   var still = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   // Wraps each word of fixed text in a .word span for the blur. A link stays whole, as one piece,
@@ -203,6 +206,19 @@
     }
     box.insertBefore(dust, box.firstChild);
 
+    // The peek: the words light up in a quick left-to-right wave, in place.
+    var peekWave = function () {
+      var words = text.querySelectorAll(".word");
+      if (still.matches || !text.animate) return;
+      var ink = getComputedStyle(box).getPropertyValue("--ink").trim();
+      var stagger = Math.min(40, 260 / words.length);
+      words.forEach(function (word, i) {
+        // Not while the greeting's entrance is still running on it.
+        if (word.getAnimations().some(function (a) { return a.animationName === "word-in" && a.playState !== "finished"; })) return;
+        word.animate([{ color: ink, offset: 0.4 }], { duration: 460, delay: i * stagger, easing: "ease-in-out" });
+      });
+    };
+
     var dustTimer;
     var setOpen = function (open) {
       if (open === box.classList.contains("is-open")) return;
@@ -213,11 +229,37 @@
       if (open) box.classList.add("has-dust");
       else dustTimer = setTimeout(function () { box.classList.remove("has-dust"); }, 400);
     };
+    var openTimer, closeTimer;
+    var isOpen = function () { return box.classList.contains("is-open"); };
+    var arm = function () {
+      clearTimeout(openTimer);
+      openTimer = setTimeout(function () {
+        box.classList.remove("is-peek");
+        setOpen(true);
+      }, DWELL);
+    };
     box.addEventListener("pointerenter", function (e) {
-      if (e.pointerType === "mouse") setOpen(true);
+      if (e.pointerType !== "mouse") return;
+      clearTimeout(closeTimer);
+      if (isOpen()) return;
+      box.classList.add("is-peek");
+      peekWave();
+      if (!e.target.closest("a")) arm();
     });
     box.addEventListener("pointerleave", function (e) {
-      if (e.pointerType === "mouse") setOpen(false);
+      if (e.pointerType !== "mouse") return;
+      clearTimeout(openTimer);
+      box.classList.remove("is-peek");
+      if (isOpen()) closeTimer = setTimeout(function () { setOpen(false); }, LINGER);
+    });
+    // While the mouse is on a link the box doesn't open, so the link never slides from under it.
+    text.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("pointerenter", function (e) {
+        if (e.pointerType === "mouse") clearTimeout(openTimer);
+      });
+      a.addEventListener("pointerleave", function (e) {
+        if (e.pointerType === "mouse" && box.classList.contains("is-peek")) arm();
+      });
     });
     // A scroll gesture never fires pointerup. A tap on a link just follows the link.
     document.addEventListener("pointerup", function (e) {
