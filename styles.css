@@ -143,6 +143,7 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .masthead {
   display: flex;
   justify-content: space-between;
+  align-items: baseline; /* the two sides differ in size: they share a baseline, not a top edge */
   gap: 1rem;
   font-size: var(--text-sm);
   color: var(--muted);
